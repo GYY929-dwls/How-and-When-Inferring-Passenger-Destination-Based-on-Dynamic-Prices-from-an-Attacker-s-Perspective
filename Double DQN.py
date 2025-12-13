@@ -6,8 +6,6 @@ This module implements a reinforcement learning system to determine the optimal 
 for privacy attacks in ridesharing services, based on the paper:
 "How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker's Perspective"
 
-Author: [Your Name]
-Date: [Date]
 """
 
 import gc
@@ -40,7 +38,7 @@ MODEL_NAME = "top-5_3000m"  # Model name for saving/loading
 
 # Reward parameters
 R_MISSED = -10  # Reward for missing a target (攻击失败)
-R_FAILED = -9  # Reward for attacking a non-target (误攻击)
+R_FAILED = -10  # Reward for attacking a non-target (误攻击)
 R_PASS = 5  # Reward for correctly passing a non-target (正确放弃)
 
 # TensorBoard logging
@@ -53,15 +51,6 @@ summary_writer = tf.summary.create_file_writer(log_dir)
 # ============================================================================
 
 def pkl_gen(file_path):
-    """
-    Generator for reading pickle files incrementally.
-
-    Args:
-        file_path: Path to pickle file
-
-    Yields:
-        Objects from pickle file one by one
-    """
     with open(file_path, "rb") as f:
         while True:
             try:
@@ -100,12 +89,12 @@ del test_data  # Free memory
 # ============================================================================
 
 class TrajEnv:
-    """
+"""
     Reinforcement Learning Environment for trajectory-based attack timing.
 
     Simulates the decision-making process of an attacker trying to determine
     the optimal time to launch a privacy attack based on partial trajectory
-    information and destination predictions.
+Information and destination predictions.
     """
 
     def __init__(self):
@@ -121,15 +110,6 @@ class TrajEnv:
         self.last_MD = None  # Last mean distance to target cluster
 
     def reset(self, traj):
-        """
-        Reset environment for a new trajectory.
-
-        Args:
-            traj: Tuple of (trajectory_index, prefix_start_index)
-
-        Returns:
-            Initial state vector [normalized_x, normalized_y, mean_distance]
-        """
         self.traj_no = traj[0]
         self.traj_prefix = traj[1]
         self.total_traj_len = len(data[self.traj_no][0])
@@ -159,19 +139,6 @@ class TrajEnv:
         return state_vector.reshape(3)
 
     def step(self, action, state):
-        """
-        Execute one step in the environment.
-
-        Args:
-            action: 0 (wait) or 1 (attack)
-            state: Current state vector
-
-        Returns:
-            next_state: Next state after action
-            reward: Immediate reward
-            done: Whether episode is finished
-            time: Time remaining if attack successful
-        """
         y_pred = pred_model[self.traj_no][self.traj_prefix]
         cur_MD = state[2]  # Current mean distance
         time = -1  # Initialize time remaining
@@ -276,37 +243,12 @@ class ReplayBuffer:
     """
 
     def __init__(self, capacity):
-        """
-        Initialize replay buffer.
-
-        Args:
-            capacity: Maximum number of transitions to store
-        """
         self.memory = deque(maxlen=capacity)
 
     def push(self, state, action, reward, next_state, done):
-        """
-        Store a transition in the buffer.
-
-        Args:
-            state: Current state
-            action: Action taken
-            reward: Reward received
-            next_state: Next state
-            done: Terminal flag
-        """
         self.memory.append((state, action, reward, next_state, done))
 
     def sample(self, batch_size):
-        """
-        Randomly sample a batch of transitions.
-
-        Args:
-            batch_size: Number of transitions to sample
-
-        Returns:
-            Tuple of (states, actions, rewards, next_states, dones) as numpy arrays
-        """
         batch = random.sample(self.memory, batch_size)
         states, actions, rewards, next_states, dones = zip(*batch)
         return (np.array(states), np.array(actions), np.array(rewards),
@@ -329,13 +271,6 @@ class DQNNetwork:
     """
 
     def __init__(self, action_dim, load=False):
-        """
-        Initialize DQN network.
-
-        Args:
-            action_dim: Number of possible actions (2: wait, attack)
-            load: Whether to load pre-trained model
-        """
         self.action_dim = action_dim
 
         if load:
@@ -346,15 +281,6 @@ class DQNNetwork:
             self.update_target_network()
 
     def _build_model(self, action_dim):
-        """
-        Build neural network architecture.
-
-        Args:
-            action_dim: Number of output actions
-
-        Returns:
-            Compiled Keras model
-        """
         model = Sequential([
             # Input layer: state vector of size 3 [x, y, mean_distance]
             Dense(64, activation='relu', input_shape=(3,)),
@@ -365,17 +291,6 @@ class DQNNetwork:
 
         model.compile(loss='mse', optimizer=Adam(learning_rate=0.001))
         return model
-
-    def load_model(self, model_path):
-        """
-        Load pre-trained model from disk.
-
-        Args:
-            model_path: Path to saved model
-
-        Returns:
-            bool: Success flag
-        """
         try:
             self.model = tf.keras.models.load_model(model_path)
             # Clone for target network
@@ -392,17 +307,6 @@ class DQNNetwork:
         self.target_model.set_weights(self.model.get_weights())
 
     def train_step(self, states, actions, q_targets):
-        """
-        Perform one training step.
-
-        Args:
-            states: Batch of states
-            actions: Batch of actions
-            q_targets: Target Q-values
-
-        Returns:
-            Loss value
-        """
         with tf.GradientTape() as tape:
             # Forward pass
             q_values = self.model(states)
@@ -441,13 +345,6 @@ class DQNAgent:
     """
 
     def __init__(self, action_size, load=False):
-        """
-        Initialize DQN agent.
-
-        Args:
-            action_size: Number of possible actions
-            load: Whether to load pre-trained model
-        """
         self.action_size = action_size
 
         # Hyperparameters
@@ -471,16 +368,6 @@ class DQNAgent:
         self.steps_done = 0
 
     def select_action(self, state, test=False):
-        """
-        Select action using ε-greedy policy.
-
-        Args:
-            state: Current state vector
-            test: Whether in test mode (no exploration)
-
-        Returns:
-            Selected action (0 or 1)
-        """
         # Exploration: random action
         if not test and random.random() < self.epsilon:
             return random.randrange(self.action_size)
@@ -491,20 +378,10 @@ class DQNAgent:
             return np.argmax(q_values)
 
     def update_epsilon(self):
-        """Decay exploration rate exponentially."""
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
     def DDQN_learn(self):
-        """
-        Perform one Double DQN learning step.
-
-        Double DQN addresses overestimation bias by using the online network
-        to select actions and the target network to evaluate them.
-
-        Returns:
-            Training loss
-        """
         # Check if enough experience collected
         if len(self.memory) < self.batch_size:
             return 0
@@ -537,7 +414,6 @@ class DQNAgent:
         return loss
 
     def update_target_network(self):
-        """Synchronize target network with online network."""
         self.network.update_target_network()
 
 
@@ -546,34 +422,13 @@ class DQNAgent:
 # ============================================================================
 
 class TestAgent:
-    """
-    Agent for testing trained models without exploration.
-
-    Used for evaluation and deployment of trained policies.
-    """
-
     def __init__(self, model):
-        """
-        Initialize test agent.
-
-        Args:
-            model: Path to saved model or model object
-        """
         if isinstance(model, str):
             self.model = tf.keras.models.load_model(model)
         else:
             self.model = model
 
     def select_action(self, state):
-        """
-        Select greedy action (no exploration).
-
-        Args:
-            state: Current state
-
-        Returns:
-            Greedy action
-        """
         state_batch = np.expand_dims(state, axis=0)
         q_values = self.model.predict(state_batch, verbose=0)[0]
         return np.argmax(q_values)
@@ -584,55 +439,22 @@ class TestAgent:
 # ============================================================================
 
 def save_model(agent, filepath="dqn_model"):
-    """
-    Save agent's model to disk.
-
-    Args:
-        agent: DQNAgent instance
-        filepath: Path to save model
-    """
     agent.network.model.save(filepath)
     print(f"✓ Model saved to {filepath}")
 
 
 def save_weights(agent, filepath="dqn_weights.h5"):
-    """
-    Save only model weights to disk.
-
-    Args:
-        agent: DQNAgent instance
-        filepath: Path to save weights
-    """
     agent.network.model.save_weights(filepath)
     print(f"✓ Model weights saved to {filepath}")
 
 
 def load_model(filepath="model/dqn_model"):
-    """
-    Load complete model from disk.
-
-    Args:
-        filepath: Path to saved model
-
-    Returns:
-        Loaded Keras model
-    """
     loaded_model = tf.keras.models.load_model(filepath)
     print(f"✓ Model loaded from {filepath}")
     return loaded_model
 
 
 def load_weights(agent, filepath="dqn_weights.h5"):
-    """
-    Load weights into existing agent.
-
-    Args:
-        agent: DQNAgent instance
-        filepath: Path to saved weights
-
-    Returns:
-        Updated agent
-    """
     agent.network.model.load_weights(filepath)
     agent.network.target_model.load_weights(filepath)
     print(f"✓ Model weights loaded from {filepath}")
@@ -644,16 +466,6 @@ def load_weights(agent, filepath="dqn_weights.h5"):
 # ============================================================================
 
 def train(agent, env):
-    """
-    Train DQN agent on trajectory environment.
-
-    Args:
-        agent: DQNAgent instance
-        env: TrajEnv instance
-
-    Returns:
-        List of episode rewards
-    """
     scores = []  # Store episode rewards
     i_episode = 0  # Episode counter
 
@@ -736,17 +548,6 @@ def train(agent, env):
 # ============================================================================
 
 def test_env(agent=None, env=None, load=False):
-    """
-    Evaluate trained agent on test trajectories.
-
-    Args:
-        agent: Trained agent (optional if load=True)
-        env: Environment instance (optional if load=True)
-        load: Whether to load pre-trained model
-
-    Returns:
-        Dictionary of evaluation metrics
-    """
     if load:
         env = TrajEnv()
         agent = TestAgent(load_model("DQN decision models/" + MODEL_NAME))
@@ -846,9 +647,6 @@ def test_env(agent=None, env=None, load=False):
 # ============================================================================
 
 def main():
-    """
-    Main training pipeline.
-    """
     print("=" * 60)
     print("PRIVACY ATTACK TIMING WITH DEEP REINFORCEMENT LEARNING")
     print("=" * 60)
