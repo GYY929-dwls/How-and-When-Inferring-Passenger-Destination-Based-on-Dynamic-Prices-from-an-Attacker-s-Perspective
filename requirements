@@ -1,1 +1,8 @@
+numpy>=1.19
+scipy>=1.5
+pandas>=1.1
+scikit-learn>=0.23
+tensorflow>=2.6
+tensorflow-addons>=0.17
+matplotlib>=3.3
 
