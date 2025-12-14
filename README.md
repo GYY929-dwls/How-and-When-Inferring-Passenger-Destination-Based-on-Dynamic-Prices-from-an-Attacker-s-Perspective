@@ -3,7 +3,7 @@ This repository provides the reference implementation for the paper:
 
 > **How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker’s Perspective**
 
-The paper is currently **under review** at *IEEE Transactions on Mobile Computing (TMC)*.
+
 
 
 本代码仓库为论文  
