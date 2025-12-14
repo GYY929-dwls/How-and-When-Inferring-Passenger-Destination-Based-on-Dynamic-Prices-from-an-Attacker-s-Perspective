@@ -138,14 +138,15 @@ pip install -r requirements.txt
 # Train CBAM model (The "How")
 python models/CBAM.py
 
-# Train Transformer-based variant
-python models/Transformer.py
-
 # Train Double DQN attacker (The "When")
-python rl/Double_DQN.py
+python models/Double_DQN.py
+
+# Run Transformer-baseline model
+python experiments/Baseline_Transformer.py
 
 # Run ablation studies
-python experiments/simple_ablation.py
+python experiments/CBAM_ablation.py
+
 ```
 
 ---
@@ -173,16 +174,27 @@ python experiments/simple_ablation.py
 ---
 
 ## 📁 Repository Structure | 仓库结构
-
 ```text
-how-when-destination-inference/
-├── models/
-├── rl/
-├── data/
-├── experiments/
-├── utils/
+How-and-When-Attack-RL/
+│
+├── README.md
 ├── requirements.txt
-└── README.md
+│
+├── models/
+│   └── CBAM.py
+│   |    # Main model proposed in the paper
+|   └── Double_DQN.py
+│       # Attack timing decision (Double DQN)
+│
+├── experiments/
+│   ├── Baseline_Transformer.py
+│   │   # Transformer baseline for comparison
+│   │
+│   └── CBAM_ablation.py
+│       # Ablation experiments
+│
+└── data/
+    └── README.md
 ```
 
 
