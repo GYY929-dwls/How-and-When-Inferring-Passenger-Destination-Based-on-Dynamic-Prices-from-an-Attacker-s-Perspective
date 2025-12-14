@@ -10,8 +10,6 @@ The paper is currently **under review** at *IEEE Transactions on Mobile Computin
 **《How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker’s Perspective》**  
 的参考实现。
 
-该论文目前**正在投稿至 IEEE Transactions on Mobile Computing（TMC）审稿中**。
-
 ---
 
 ## 📖 Abstract | 摘要
@@ -204,6 +202,7 @@ How-and-When-Attack-RL/
 
 * **Suiming Guo** (Jinan University)
 * **Weilin Liu** (Jinan University)
+* **Yuanyuan Guo** (Jinan University)
 * **Yuxia Sun** (Jinan University, Corresponding Author)
 * **Chao Chen** (Chongqing University, Corresponding Author)
 * **Chengwu Liao** (China Unicom)
