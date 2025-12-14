@@ -359,7 +359,7 @@ def train_single_ablation_model(config_name, config):
             verbose=1
         )
 
-    print(f"✅ Finished training {config_name}")
+    print(f"Finished training {config_name}")
     return history
 
 
@@ -378,14 +378,14 @@ def run_ablation_study():
         # 构建模型
         model = build_ablation_model(config)
 
-        # === 修改这里：加载对应配置的权重 ===
+        # === 加载对应已有配置的权重 ===
         checkpoint_path = f"ablation_checkpoints/{config_name}/checkpoint"
         try:
             model.load_weights(checkpoint_path)
-            print(f"✅ Loaded trained weights for {config_name}")
+            print(f"Loaded trained weights for {config_name}")
         except:
-            print(f"❌ No trained weights found for {config_name}")
-            print(f"💡 Running training for {config_name} first...")
+            print(f"No trained weights found for {config_name}")
+            print(f"Running training for {config_name} first...")
 
             # 如果没有训练权重，先训练这个配置
             train_single_ablation_model(config_name, config)
@@ -393,10 +393,9 @@ def run_ablation_study():
             # 重新加载权重
             try:
                 model.load_weights(checkpoint_path)
-                print(f"✅ Loaded newly trained weights for {config_name}")
+                print(f"Loaded newly trained weights for {config_name}")
             except:
-                print(f"⚠️  Using randomly initialized model for {config_name}")
-        # === 修改结束 ===
+                print(f"Using randomly initialized model for {config_name}")
 
         config_results = {}
 
@@ -585,4 +584,5 @@ if __name__ == "__main__":
     ablation_configs.clear()
     ablation_configs.update(original_configs)
 
-    print("\n🎉 Non-full ablation study completed!")
+    print("\n Non-full ablation study completed!")
+
