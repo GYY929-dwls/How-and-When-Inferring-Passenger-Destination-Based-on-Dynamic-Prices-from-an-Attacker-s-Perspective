@@ -1,70 +1,92 @@
-# How-and-When-Inferring-Passenger-Destination-Based-on-Dynamic-Prices-from-an-Attacker-s-Perspective
-《How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker’s Perspective》IEEE TRANSACTIONS ON MOBILE COMPUTING 2025
-How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker's Perspective
 
-https://ieeexplore.ieee.org/document/XXXXXXX
-https://www.python.org/
-https://www.tensorflow.org/
-LICENSE
+This repository provides the reference implementation for the paper:
 
-This repository contains the official implementation for the paper "How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker's Perspective" published in IEEE Transactions on Mobile Computing, 2025.
+> **How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker’s Perspective**
 
-📖 Abstract
-
-Ride-on-Demand (RoD) services like Uber and Didi have revolutionized urban transportation through dynamic pricing mechanisms. While improving efficiency, these pricing strategies introduce significant privacy concerns. This work investigates how attackers can leverage dynamic pricing information to infer passenger destinations more accurately and determines the optimal timing for such privacy attacks.
-
-We propose a comprehensive framework addressing two key questions:
-• How: How can dynamic prices help attackers infer passenger destinations more accurately?
-
-• When: When is the optimal timing to conduct such attacks to maximize success while avoiding premature trajectory endings?
+The paper is currently **under review** at *IEEE Transactions on Mobile Computing (TMC)*.
 
 
+本代码仓库为论文  
+**《How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker’s Perspective》**  
+的参考实现。
 
-🏗️ Architecture Overview
+该论文目前**正在投稿至 IEEE Transactions on Mobile Computing（TMC）审稿中**。
 
-Core Components
+---
 
-Our solution consists of two main components:
+## 📖 Abstract | 摘要
 
-1. Conditional BiLSTM-Attention Model (CBAM) - The "How"
+### English
 
-• BiLSTM Network: Captures forward and backward trajectory dependencies
+Ride-on-Demand (RoD) services such as Uber and Didi have significantly improved urban transportation efficiency through dynamic pricing mechanisms. However, such pricing strategies also introduce serious privacy risks.
 
-• Conditional Recurrent Mechanism: Incorporates dynamic price information into initial states
+This work investigates how attackers can leverage dynamic pricing information to infer passenger destinations more accurately and further explores when such attacks should be launched to maximize inference success while avoiding premature termination due to incomplete trajectories.
 
-• Attention Layer: Addresses long-range dependency problems
+We focus on two key research questions:
 
-• Multi-modal Fusion: Integrates GPS trajectories, dynamic prices, and auxiliary features
+- **How**: How can dynamic prices assist attackers in improving destination inference accuracy?
+- **When**: When is the optimal timing to conduct inference attacks during trajectory evolution?
 
+---
 
+### 中文
 
-2. Deep Reinforcement Learning Model - The "When"
+网约车（Ride-on-Demand，RoD）服务（如 Uber、滴滴）通过动态定价机制显著提升了城市交通运行效率，但与此同时也引入了潜在的隐私风险。
 
-• Double DQN Architecture: Determines optimal attack timing
+本文从**攻击者视角**出发，研究攻击者如何利用动态价格信息更准确地推断乘客目的地，并进一步探讨在轨迹演化过程中，攻击者应在何时发起攻击以在保证成功率的同时避免因轨迹过短而失败。
 
-• State Representation: Combines partial trajectories and prediction confidence
+本文重点围绕以下两个问题展开：
 
-• Reward Design: Balances attack success and timeliness
+- **How（如何）**：动态价格如何辅助提升目的地推断精度？
+- **When（何时）**：在轨迹演化过程中，攻击的最优时机是什么？
 
-• Real-time Decision Making: Dynamically adjusts attack strategy
+---
 
-📊 Key Features
+## 🏗️ Architecture Overview | 架构概览
 
-• Dynamic Price Integration: First work to incorporate dynamic pricing in passenger destination inference
+### Core Components | 核心模块
 
-• Dual-Problem Solution: Addresses both inference accuracy (How) and timing optimization (When)
+Our framework consists of two main components:
 
-• Real-world Evaluation: Extensive experiments on real RoD service datasets
+本研究提出的整体框架由两个核心模块组成：
 
-• Privacy Threat Analysis: Comprehensive study from attacker's perspective
+---
 
-• Modular Design: Flexible components for different attack scenarios
+### 1. Conditional BiLSTM-Attention Model (CBAM) — *The “How”*  
+**条件式 BiLSTM-注意力模型（CBAM）——“如何推断”**
 
-🗂️ Dataset Structure
+- BiLSTM network capturing forward and backward trajectory dependencies  
+- Conditional recurrent mechanism integrating dynamic price information  
+- Attention layer for modeling long-range dependencies  
+- Multi-modal fusion of GPS trajectories, dynamic prices, and auxiliary features  
 
-Required Data Files
+---
 
+### 2. Deep Reinforcement Learning Model — *The “When”*  
+**深度强化学习模型——“何时攻击”**
 
+- Double DQN architecture for optimal attack timing decisions  
+- State representation combining partial trajectories and prediction confidence  
+- Reward design balancing accuracy and timeliness  
+- Real-time decision-making during trajectory evolution  
+
+---
+
+## 📊 Key Features | 关键特性
+
+- Dynamic price integration for destination inference  
+- Joint modeling of inference accuracy (**How**) and attack timing (**When**)  
+- Extensive evaluation on real-world RoD datasets  
+- Privacy threat analysis from an attacker’s perspective  
+- Modular and extensible framework design  
+
+---
+
+## 🗂️ Example Data Architecture | 示例数据集结构
+
+### Required Data Files
+
+```text
 data/
 ├── training/
 │   ├── train_80%_all_level8_new_clusters_1.csv
@@ -78,254 +100,136 @@ data/
     │   └── mean_shift clustering/
     │       └── 965_clusters_center_coords.csv
     └── ...
+````
 
+### Data Fields | 数据字段说明
 
-Data Fields
+* **coords_of_traj**: GPS trajectory coordinates
+* **dest_cluster**: destination cluster ID (0–964)
+* **dp_cur, dp_30min_prev, dp_1h_prev**: dynamic price multipliers
+* **daytype, weather_*, hour_sin, hour_cos**: auxiliary contextual features
 
-• coords_of_traj: GPS trajectory coordinates
+---
 
-• dest_cluster: Destination cluster ID (0-964)
+## 🚀 Quick Start | 快速开始
 
-• dp_cur, dp_30min_prev, dp_1h_prev: Dynamic price multipliers
+> **Note**: This repository provides research-oriented reference implementations for experimental reproduction rather than production use.
+> **说明**：本仓库代码用于科研复现实验，不作为工业级或生产级系统。
 
-• daytype, weather_*, hour_sin, hour_cos: Auxiliary features
-
-
-
-🚀 Quick Start
-
-Installation
-
+```bash
 # Clone the repository
 git clone https://github.com/your-username/how-when-destination-inference.git
 cd how-when-destination-inference
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
 # Install dependencies
 pip install -r requirements.txt
+```
 
+### Usage
 
-Basic Usage
+```bash
+# Train CBAM model (The "How")
+python models/CBAM.py
 
-1. Train the CBAM Model:
-from models.cbam import CBAMModel
+# Train Transformer-based variant
+python models/Transformer.py
 
-# Initialize model
-model = CBAMModel(
-    lstm_units=512,
-    dense_units=1024,
-    num_classes=965,
-    use_dp_condition=True
-)
+# Train Double DQN attacker (The "When")
+python rl/Double_DQN.py
 
-# Train model
-model.train(
-    train_data_path="data/training/train_80%_all_level8_new_clusters_1.csv",
-    val_data_path="data/validation/val_80%_all_level8_new_clusters_1.csv",
-    epochs=200,
-    batch_size=128
-)
-
-
-2. Destination Inference:
-# Load trained model
-model.load_weights("checkpoints/cbam_model.h5")
-
-# Infer destination from partial trajectory
-trajectory = [[116.35, 39.95], [116.36, 39.94], ...]  # Partial GPS coordinates
-dynamic_prices = [1.42, 1.22, 1.15]  # Current, 30min ago, 1h ago
-auxiliary_features = [0, 1, 0, 0, 0, 0, 0.8, 0.6]  # Day type, weather, time
-
-predictions = model.infer_destination(
-    trajectory=trajectory,
-    dynamic_prices=dynamic_prices,
-    auxiliary_features=auxiliary_features
-)
-
-
-3. RL-based Timing Decision:
-from rl.ddqn_agent import DQNAgent
-
-# Initialize RL agent
-agent = DQNAgent(
-    state_dim=3,  # [x, y, mean_distance]
-    action_dim=2,  # [wait, attack]
-    learning_rate=0.001
-)
-
-# Train timing decision model
-agent.train(
-    trajectories=data,
-    num_episodes=10000,
-    batch_size=64
-)
-
-
-📈 Experimental Results
-
-Performance Metrics
-
-Model Top-1 Distance Error (m) Top-5 Accuracy (%)
-
-CBAM (Ours) 3,268 76.9
-
-CBAM-noDP 3,318 75.9
-
-T-CONV* 3,517 -
-
-LSTM+* 3,395 -
-Dynamic Price Impact Analysis
-Scenario Improvement with Dynamic Prices
-
-Early Trajectory (10%) +48.0% Top-5 Accuracy
-
-Mid Trajectory (50%) Minimal improvement
-
-Late Trajectory (90%) +1.3% Top-5 Accuracy
-
-
-
-🔧 Advanced Usage
-
-Ablation Studies
-
-The code includes comprehensive ablation studies to analyze component contributions:
 # Run ablation studies
-python ablation_studies.py --config all
+python experiments/simple_ablation.py
+```
 
-# Specific configurations
-python ablation_studies.py --config no_dp_condition
-python ablation_studies.py --config no_attention
-python ablation_studies.py --config unidirectional
+---
 
+## 📈 Comparing with Baselines Experimental Results | 基线实验对照实验结果
 
-Transformer-based Variant
-
-For advanced users, we provide a Transformer-based implementation:
-from models.transformer_destination import TransformerDestinationPredictor
-
-transformer_model = TransformerDestinationPredictor(
-    d_model=256,
-    num_heads=8,
-    num_layers=3,
-    dff=512
-)
+| Model       | Top-1 Avg.Distance Error (m) | 
+| ----------- | ------------------------ | 
+| CBAM-0.5h   | 3268                     | 
+| CBAM-noDP   | 3318                     |
+| T-CONV*     | 3517                     | 
+| LSTM+*      | 3395                     | 
+| Seq2Seq*	  | 4,005	                 |
+| MLP*	      | 4,387	                 |(pytest = 80%)
 
 
-📋 Configuration Options
+### Dynamic Price Impact Analysis
 
-Model Parameters
+| Scenario               | Improvement           |
+| ---------------------- | --------------------- |
+| Early trajectory (10%) | +48.0% Top-5 Accuracy |
+| Mid trajectory (50%)   | Minimal               |
+| Late trajectory (90%)  |  Slight Refinement    |
 
-config = {
-    # Architecture
-    "lstm_units": 512,
-    "dense_units": 1024,
-    "attention_units": 256,
-    
-    # Training
-    "learning_rate": 0.001,
-    "batch_size": 128,
-    "epochs": 200,
-    
-    # Dynamic Prices
-    "use_dp_condition": True,
-    "dp_dim": 3,
-    
-    # Data
-    "max_traj_len": 81,
-    "grid_level": 8,
-    "num_clusters": 965
-}
+---
 
+## 📁 Repository Structure | 仓库结构
 
-📁 Repository Structure
-
-
+```text
 how-when-destination-inference/
 ├── models/
-│   ├── cbam.py                 # Main CBAM implementation
-│   ├── transformer_model.py    # Transformer variant
-│   └── ablation_models.py      # Ablation study configurations
 ├── rl/
-│   ├── ddqn_agent.py          # Reinforcement learning agent
-│   ├── environment.py         # RL environment
-│   └── replay_buffer.py       # Experience replay
 ├── data/
-│   ├── preprocess.py          # Data preprocessing
-│   ├── loaders.py             # Data loading utilities
-│   └── augmentation.py        # Data augmentation
-├── utils/
-│   ├── metrics.py             # Evaluation metrics
-│   ├── visualization.py       # Plotting utilities
-│   └── config.py              # Configuration management
 ├── experiments/
-│   ├── ablation_studies.py    # Ablation experiments
-│   ├── baseline_comparison.py # Baseline comparisons
-│   └── case_studies.py        # Case studies
-├── requirements.txt           # Python dependencies
-├── setup.py                  # Package installation
-└── README.md                 # This file
+├── utils/
+├── requirements.txt
+└── README.md
+```
 
 
-🎯 Citation
+---
 
-If you use this code in your research, please cite our paper:
-@article{guo2025how,
-  title={How and When: Inferring Passenger Destination Based on Dynamic Prices from an Attacker's Perspective},
-  author={Guo, Suiming and Liu, Weilin and Sun, Yuxia and Chen, Chao and Liao, Chengwu and Liu, Yaxiao and Xu, Ke},
-  journal={IEEE Transactions on Mobile Computing},
-  volume={XX},
-  number={X},
-  pages={1--18},
-  year={2025},
-  publisher={IEEE}
-}
+## 👥 Contributors | 作者与贡献者
+
+* **Suiming Guo** (Jinan University)
+* **Weilin Liu** (Jinan University)
+* **Yuxia Sun** (Jinan University, Corresponding Author)
+* **Chao Chen** (Chongqing University, Corresponding Author)
+* **Chengwu Liao** (China Unicom)
+* **Yaxiao Liu** (Tsinghua University)
+* **Ke Xu** (Tsinghua University)
+
+---
+
+## 📄 License | 许可协议
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 🤝 Contributing | 贡献说明
+
+We welcome contributions from the research community.
+欢迎学术界同行提出问题、建议或贡献代码。
+
+---
+
+## 💡 Future Work | 未来工作
+
+* Extension to other dynamic pricing services (airline, hotel, smart grid)
+* Improved trajectory representation learning
+* Federated learning for privacy preservation
+* Real-time attack detection and defense
+
+---
 
 
-👥 Contributors
+### Disclaimer | 免责声明
 
-• Suiming Guo (Jinan University) - [guosuiming@email.jnu.edu.cn]
+This research is presented from an attacker’s perspective to highlight privacy risks.
+The authors do not encourage or endorse any malicious use.
 
-• Weilin Liu (Jinan University)
-
-• Yuxia Sun (Jinan - Corresponding Author
-
-• Chao Chen (Chongqing University) - Corresponding Author
-
-• Chengwu Liao (China Unicom)
-
-• Yaxiao Liu (Tsinghua University)
-
-• Ke Xu (Tsinghua University)
-
-📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-🤝 Contributing
-
-We welcome contributions from the research community! Please feel free to submit issues, feature requests, or pull requests.
-
-💡 Future Work
-
-• Extension to other services with dynamic pricing (airline, hotel, smart grid)
-
-• Improved trajectory representation learning
-
-• Federated learning for privacy preservation
-
-• Real-time attack detection and defense mechanisms
-
-📞 Contact
-
-For questions or discussions about this work, please contact:
-• Yuxia Sun: tyxsun@email.jnu.edu.cn  
-
-• Chao Chen: cschaochen@cqu.edu.cn
+本研究从攻击者视角出发，旨在揭示潜在隐私风险，作者不支持或鼓励任何恶意使用行为。
 
 
 
-Disclaimer: This research is presented from an attacker's perspective to raise awareness about privacy implications of dynamic pricing. The authors do not endorse or encourage any malicious use of these techniques.
+##  Note | 注意
+
+This repository is provided to support the peer-review process.
+The code structure and documentation may be further refined after paper acceptance.
+
+
+本仓库用于支持论文审稿与学术交流。论文录用后，代码结构与文档可能会进一步完善。
+
