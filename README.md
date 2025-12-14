@@ -39,8 +39,10 @@ We focus on two key research questions:
 
 - **How（如何）**：动态价格如何辅助提升目的地推断精度？
 - **When（何时）**：在轨迹演化过程中，攻击的最优时机是什么？
+<img width="829" height="349" alt="1" src="https://github.com/user-attachments/assets/fe8e2591-ffd3-448b-8037-b8dea7b52954" />
 
 ---
+
 
 ## 🏗️ Architecture Overview | 架构概览
 
@@ -59,6 +61,8 @@ Our framework consists of two main components:
 - Conditional recurrent mechanism integrating dynamic price information  
 - Attention layer for modeling long-range dependencies  
 - Multi-modal fusion of GPS trajectories, dynamic prices, and auxiliary features  
+<img width="881" height="580" alt="1" src="https://github.com/user-attachments/assets/09483dc1-57f2-4c64-9b55-b801e0098d6a" />
+
 
 ---
 
@@ -69,8 +73,11 @@ Our framework consists of two main components:
 - State representation combining partial trajectories and prediction confidence  
 - Reward design balancing accuracy and timeliness  
 - Real-time decision-making during trajectory evolution  
+<img width="735" height="507" alt="1" src="https://github.com/user-attachments/assets/b2f80eac-ba7b-4773-b975-416d6637f8cf" />
 
 ---
+
+
 
 ## 📊 Key Features | 关键特性
 
