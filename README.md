@@ -193,11 +193,6 @@ how-when-destination-inference/
 
 ---
 
-## 📄 License | 许可协议
-
-This project is licensed under the **MIT License**.
-
----
 
 ## 🤝 Contributing | 贡献说明
 
